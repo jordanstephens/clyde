@@ -1,0 +1,10 @@
+          hosts "foo.com", "bar.com"
+
+          before :each do
+            puts "i'm a before hook"
+          end
+
+          paths %w(
+            /pathone.html
+            /pathtwo.html
+          )

@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "clyde"
+
+Clyde.run(ARGV.dup)
