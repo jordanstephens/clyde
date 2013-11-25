@@ -30,11 +30,19 @@ describe Clyde do
   end
 
   describe ".distribute_paths" do
-    # it "distributes a job for each path" do
-    #   Clyde.hosts = ["jordanstephens.net", "staging.jordanstephens.net"]
-    #   Clyde.paths = ["/"]
-    #   Clyde.distribute_paths
-    # end
+    it "distributes a job for each path" do
+      Clyde.hosts = ["localhost:30001", "localhost:30002"]
+      Clyde.paths = ["/"]
+
+      Clyde.hosts.each do |host|
+        Clyde.paths.each do |path|
+          proxy.stub("http://#{host}#{path}")
+               .and_return(text: "stub that shit")
+        end
+      end
+
+      Clyde.distribute_paths
+    end
   end
 end
 

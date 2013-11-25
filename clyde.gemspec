@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "guard-rspec"
+  spec.add_development_dependency "puffing-billy"
   spec.add_dependency "colored"
   spec.add_dependency "poltergeist"
   spec.add_dependency "chunky_png"
