@@ -4,6 +4,7 @@ require "clyde/screenshot"
 
 module Clyde
   class Job
+    include Clyde::Utils
     include Capybara::DSL
 
     def initialize(path)
@@ -11,6 +12,7 @@ module Clyde
       Clyde.hosts.each do |host|
 
         set_capybara_host(host)
+        log "#{host}#{path}"
         visit path
         run_before_hooks
         save_screenshot(host, path, page, {})
@@ -20,7 +22,7 @@ module Clyde
         diff = ImageUtil.pixel_difference(@screenshots[0].file_path,
                                           @screenshots[1].file_path)
 
-        puts "#{diff} - #{path}"
+        log "#{diff} - #{path}"
       end
     end
 

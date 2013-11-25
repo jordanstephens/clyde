@@ -2,6 +2,7 @@ require "capybara"
 require "capybara/poltergeist"
 require "optparse"
 
+require "clyde/utils"
 require "clyde/clydefile"
 require "clyde/dsl"
 require "clyde/ghost"
@@ -23,8 +24,9 @@ module Clyde
 
   class << self
     include Hooks
+    include Utils
 
-    attr_accessor :hosts, :paths,
+    attr_accessor :hosts, :paths, :quiet,
                   :clydefile, :screenshots_path
 
     def run(args)
@@ -46,6 +48,7 @@ module Clyde
       @paths = []
       @clydefile = "./Clydefile"
       @screenshots_path = "./tmp/clyde"
+      @quiet = false
       unset_all_hooks
     end
 
@@ -61,12 +64,16 @@ module Clyde
           @screenshots_path = path
         end
 
-        opts.on("-h", "--help", "This is it") do |path|
+        opts.on("--quiet", "Be quiet") do
+          @quiet = true
+        end
+
+        opts.on("-h", "--help", "This is it") do
           puts opts.help
           exit_normal
         end
 
-        opts.on("-v", "--version", "Show version") do |path|
+        opts.on("-v", "--version", "Show version") do
           puts Clyde::VERSION
           exit_normal
         end
@@ -88,10 +95,6 @@ module Clyde
       Clyde.paths.each do |path|
         Clyde::Job.new(path)
       end
-    end
-
-    def exit_normal
-      Kernel.exit(0)
     end
   end
 end

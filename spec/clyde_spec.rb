@@ -27,10 +27,18 @@ describe Clyde do
       Clyde.run(["-S", screenshots_path, "-C", clydefile_path])
       expect(Clyde.screenshots_path).to eql(screenshots_path)
     end
+
+    it "runs quietly with --quiet" do
+      clydefile_path = "spec/data/empty_clydefile"
+      Clyde.run(["--quiet", "-C", clydefile_path])
+      expect(Clyde.quiet).to eql(true)
+    end
   end
 
   describe ".distribute_paths" do
     it "distributes a job for each path" do
+      Clyde.quiet = true
+
       Clyde.hosts = ["localhost:30001", "localhost:30002"]
       Clyde.paths = ["/"]
 
