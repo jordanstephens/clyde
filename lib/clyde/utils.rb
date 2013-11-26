@@ -1,3 +1,4 @@
+require "colored"
 
 module Clyde
   module Utils
@@ -7,7 +8,7 @@ module Clyde
     end
 
     def log(str)
-      puts str unless Clyde.quiet
+      puts str.yellow unless Clyde.quiet
     end
   end
 end
