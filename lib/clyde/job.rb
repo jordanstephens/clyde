@@ -7,23 +7,39 @@ module Clyde
     include Clyde::Utils
     include Capybara::DSL
 
+    attr_reader :path, :screenshots
+
     def initialize(path)
+      @path = path
       @screenshots = []
+    end
+
+    def run
       Clyde.hosts.each do |host|
-
-        set_capybara_host(host)
-        log "#{host}#{path}"
-        visit path
+        fetch_page_from_host(host)
         run_before_hooks
-        save_screenshot(host, path, page, {})
+        @screenshots << Screenshot.new(host, @path, page, {})
       end
 
-      if @screenshots.length == 2
-        diff = ImageUtil.pixel_difference(@screenshots[0].file_path,
-                                          @screenshots[1].file_path)
-
-        log "#{diff} - #{path}"
+      screenshot_count = @screenshots.length
+      expected_count = Clyde.hosts.length
+      if screenshot_count == Clyde.hosts.length
+        diff_percentage = diff_screenshots
+        log "#{diff_percentage} - #{@path}"
+      else
+        log "Error: #{screenshot_count} of #{expected_count} screenshots generated for #{@path}"
       end
+    end
+
+    def fetch_page_from_host(host)
+      set_capybara_host(host)
+      log "#{host}#{@path}"
+      visit @path
+    end
+
+    def diff_screenshots
+      ImageUtil.pixel_difference(@screenshots[0].file_path,
+                                 @screenshots[1].file_path)
     end
 
     def set_capybara_host(host)
@@ -34,10 +50,10 @@ module Clyde
       Clyde.before_each_hooks.each do |hook|
         instance_eval &(hook.proc)
       end
-    end
 
-    def save_screenshot(host, path, page, opts = {})
-      @screenshots << Screenshot.new(host, path, page, {})
+      Clyde.before_matched_hooks.each do |hook|
+        instance_eval &(hook.proc) if !!hook.key.match(@path)
+      end
     end
   end
 end

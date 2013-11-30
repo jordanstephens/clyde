@@ -93,7 +93,7 @@ module Clyde
 
     def distribute_paths
       Clyde.paths.each do |path|
-        Clyde::Job.new(path)
+        Clyde::Job.new(path).run
       end
     end
   end
