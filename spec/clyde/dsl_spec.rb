@@ -19,7 +19,7 @@ describe Clyde::Dsl do
     it "defines before hooks" do
       hook = Proc.new { puts "before" }
       Clyde::Dsl.before :each, &hook
-      expect(Clyde.before_hooks[:each].first).to eql(hook)
+      expect(Clyde.before_each_hooks.first.proc).to eql(hook)
     end
   end
 end

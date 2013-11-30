@@ -11,14 +11,9 @@ module Clyde
       end
 
       def before(matcher = :each, &block)
-        if matcher == :each
-          before_each(&block)
-        end
-      end
-
-      def before_each(&block)
-        Clyde.add_before_hook(:each, &block)
+        Clyde.add_before_hook(:each, &block) if matcher == :each
       end
     end
   end
 end
+

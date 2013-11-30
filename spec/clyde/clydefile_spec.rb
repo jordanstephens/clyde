@@ -33,7 +33,7 @@ describe Clyde::Clydefile do
 
     it "uses a DSL to define before hooks" do
       Clyde::Clydefile.evaluate(@clydefile_path)
-      expect(Clyde.before_hooks[:each].length).to eql(1)
+      expect(Clyde.before_each_hooks.length).to eql(1)
     end
   end
 end

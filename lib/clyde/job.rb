@@ -31,9 +31,8 @@ module Clyde
     end
 
     def run_before_hooks
-      return if Clyde.before_hooks.empty? || Clyde.before_hooks[:each].nil?
-      Clyde.before_hooks[:each].each do |hook|
-        instance_eval &hook
+      Clyde.before_each_hooks.each do |hook|
+        instance_eval &(hook.proc)
       end
     end
 
