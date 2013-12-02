@@ -54,9 +54,19 @@ describe Clyde::Job do
 
       Clyde.add_before_hook(:each) { foo = :bar }
       Clyde.add_before_hook(/.+/) { baz = :qux }
+      Clyde.add_before_hook(:each) do |page, opts|
+        opts[:foo] = :bar
+      end
 
       job = Clyde::Job.new("/foo")
+
+      screenshot_opts = job.instance_variable_get("@screenshot_opts")
+      expect(screenshot_opts).to eql({})
+
       job.run_before_hooks
+
+      screenshot_opts = job.instance_variable_get("@screenshot_opts")
+      expect(screenshot_opts).to eql({ foo: :bar })
     end
   end
 end

@@ -12,13 +12,14 @@ module Clyde
     def initialize(path)
       @path = path
       @screenshots = []
+      @screenshot_opts = {}
     end
 
     def run
       Clyde.hosts.each do |host|
         fetch_page_from_host(host)
         run_before_hooks
-        @screenshots << Screenshot.new(host, @path, page, {})
+        @screenshots << Screenshot.new(host, @path, page, @screenshot_opts)
       end
 
       screenshot_count = @screenshots.length
@@ -48,11 +49,11 @@ module Clyde
 
     def run_before_hooks
       Clyde.before_each_hooks.each do |hook|
-        instance_eval &(hook.proc)
+        instance_exec(page, @screenshot_opts, &(hook.proc))
       end
 
       Clyde.before_matched_hooks.each do |hook|
-        instance_eval &(hook.proc) if !!hook.key.match(@path)
+        instance_exec(page, @screenshot_opts, &(hook.proc)) if !!hook.key.match(@path)
       end
     end
   end
