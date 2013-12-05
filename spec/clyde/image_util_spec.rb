@@ -10,17 +10,17 @@ describe Clyde::ImageUtil do
 
     it "identifies identical images" do
       percentage = Clyde::ImageUtil.pixel_difference(@red, @red)
-      expect(percentage).to eql("0.0%")
+      expect(percentage).to eql(0.0)
     end
 
     it "identifies partially different images" do
       percentage = Clyde::ImageUtil.pixel_difference(@red, @half_red)
-      expect(percentage).to eql("50.0%")
+      expect(percentage).to eql(0.5)
     end
 
     it "identifies completely different images" do
       percentage = Clyde::ImageUtil.pixel_difference(@red, @blue)
-      expect(percentage).to eql("100.0%")
+      expect(percentage).to eql(1.0)
     end
   end
 end

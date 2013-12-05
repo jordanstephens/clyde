@@ -21,6 +21,7 @@ module Clyde
   end
 
   SCREENSHOT_EXTENSION = "png"
+  DIFF_THRESHOLD = 0.01
 
   class << self
     include Hooks

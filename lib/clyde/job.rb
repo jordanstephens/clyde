@@ -25,8 +25,9 @@ module Clyde
       screenshot_count = @screenshots.length
       expected_count = Clyde.hosts.length
       if screenshot_count == Clyde.hosts.length
-        diff_percentage = diff_screenshots
-        log "#{diff_percentage} - #{@path}", color: :green
+        difference = diff_screenshots
+        color = difference > DIFF_THRESHOLD ? :red : :green
+        log "#{difference * 100}% - #{@path}", color: color
       else
         log "Error: #{screenshot_count} of #{expected_count} screenshots generated for #{@path}", color: :red
       end
