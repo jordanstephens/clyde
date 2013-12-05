@@ -61,12 +61,12 @@ describe Clyde::Job do
       job = Clyde::Job.new("/foo")
 
       screenshot_opts = job.instance_variable_get("@screenshot_opts")
-      expect(screenshot_opts).to eql({})
+      expect(screenshot_opts[:foo]).to eql(nil)
 
       job.run_before_hooks
 
       screenshot_opts = job.instance_variable_get("@screenshot_opts")
-      expect(screenshot_opts).to eql({ foo: :bar })
+      expect(screenshot_opts[:foo]).to eql(:bar)
     end
   end
 end

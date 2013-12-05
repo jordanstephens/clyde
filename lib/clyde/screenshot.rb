@@ -8,11 +8,7 @@ module Clyde
       @host = host
       @url_path = url_path
 
-      default_opts = {
-        full: true
-      }
-
-      opts = default_opts.merge(opts)
+      opts = self.class.default_opts.merge(opts)
 
       # can't use :full and :selector at the same time,
       # so if :selector is defined, remove :full
@@ -27,6 +23,10 @@ module Clyde
       filename = [CGI.escape(@url_path),
                   Clyde::SCREENSHOT_EXTENSION].join(".")
       File.join(Clyde.screenshots_path, @host, filename)
+    end
+
+    def self.default_opts
+      { full: true }
     end
   end
 end

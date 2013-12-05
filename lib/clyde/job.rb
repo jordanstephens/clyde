@@ -12,7 +12,7 @@ module Clyde
     def initialize(path)
       @path = path
       @screenshots = []
-      @screenshot_opts = {}
+      @screenshot_opts = Clyde::Screenshot.default_opts
     end
 
     def run
