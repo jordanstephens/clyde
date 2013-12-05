@@ -16,10 +16,20 @@ describe Clyde::Dsl do
   end
 
   describe ".before" do
-    it "defines before hooks" do
+    it "defines before each hooks" do
       hook = Proc.new { puts "before" }
+      expect(Clyde.before_each_hooks.length).to eql(0)
       Clyde::Dsl.before :each, &hook
+      expect(Clyde.before_each_hooks.length).to eql(1)
       expect(Clyde.before_each_hooks.first.proc).to eql(hook)
+    end
+
+    it "defines before matched hooks" do
+      hook = Proc.new { puts "before" }
+      expect(Clyde.before_matched_hooks.length).to eql(0)
+      Clyde::Dsl.before /.+/, &hook
+      expect(Clyde.before_matched_hooks.length).to eql(1)
+      expect(Clyde.before_matched_hooks.first.proc).to eql(hook)
     end
   end
 end
