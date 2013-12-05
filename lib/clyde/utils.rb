@@ -7,8 +7,9 @@ module Clyde
       Kernel.exit(0)
     end
 
-    def log(str)
-      puts str.yellow unless Clyde.quiet
+    def log(str, opts = {})
+      opts[:color] ||= :yellow
+      puts str.send(opts[:color]) unless Clyde.quiet
     end
   end
 end
