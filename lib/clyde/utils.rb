@@ -1,4 +1,4 @@
-require "colored"
+require "colorize"
 
 module Clyde
   module Utils
@@ -8,8 +8,8 @@ module Clyde
     end
 
     def log(str, opts = {})
-      opts[:color] ||= :yellow
-      puts str.send(opts[:color]) unless Clyde.quiet
+      opts[:color] ||= :default
+      puts str.colorize(opts[:color]) unless Clyde.quiet
     end
   end
 end

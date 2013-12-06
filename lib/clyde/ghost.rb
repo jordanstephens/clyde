@@ -1,12 +1,12 @@
-require "colored"
+require "colorize"
 
 module Clyde
   class Ghost
     def self.to_s
       n = " "
-      y = " ".blue_on_yellow
-      w = " ".red_on_white
-      b = " ".red_on_blue
+      y = " ".colorize(background: :yellow)
+      w = " ".colorize(background: :white)
+      b = " ".colorize(background: :blue)
       l = "\n"
 
       art = [
