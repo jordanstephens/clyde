@@ -9,6 +9,11 @@ module Clyde
 
     def log(str, opts = {})
       opts[:color] ||= :default
+      puts str.colorize(opts[:color])
+    end
+
+    def notice(str, opts = {})
+      opts[:color] ||= :default
       puts str.colorize(opts[:color]) unless Clyde.quiet
     end
   end

@@ -35,7 +35,7 @@ module Clyde
 
     def fetch_page_from_host(host)
       set_capybara_host(host)
-      log "#{host}#{@path}"
+      notice "#{host}#{@path}"
       visit @path
     end
 
