@@ -3,30 +3,27 @@ require "chunky_png"
 module Clyde
   module ImageUtil
     def self.pixel_difference(path_a, path_b)
-
-      # try an md5 hash first to see if the files are identical
-      # if they are not identical, use a more detailed (slower) diff method
-      image_hashes = [path_a, path_b].map { |path| Digest::MD5.file(path) }
-      return 0.0 if image_hashes[0] == image_hashes[1]
-
       images = [path_a, path_b].map do |path|
         ChunkyPNG::Image.from_file(path)
       end
 
-      diff = []
+      # compare hashes first to see if the images are identical
+      # if they are not identical, use a more detailed (and much
+      # slower) diff method to obtain the degree of difference
+      return 0.0 if identical?(*images)
 
-      begin
-        images.first.height.times do |y|
-          images.first.row(y).each_with_index do |pixel, x|
-            diff << [x, y] unless pixel == images.last[x, y]
-          end
+      different_pixel_count = 0
+      images.first.height.times do |y|
+        images.first.row(y).each_with_index do |pixel, x|
+          different_pixel_count += 1 unless pixel == images.last[x, y]
         end
-
-        percentage = (diff.length.to_f / images.first.pixels.length).round(3)
-        percentage
-      rescue ChunkyPNG::OutOfBounds
-        "N/A (Images are of different dimensions)"
       end
+
+      (different_pixel_count.to_f / images.first.pixels.length).round(3)
+    end
+
+    def self.identical?(image_a, image_b)
+      image_a.hash == image_b.hash
     end
   end
 end
