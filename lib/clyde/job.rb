@@ -25,9 +25,7 @@ module Clyde
       screenshot_count = @screenshots.length
       expected_count = Clyde.hosts.length
       if screenshot_count == Clyde.hosts.length
-        difference = diff_screenshots
-        color = difference > DIFF_THRESHOLD ? :red : :green
-        log "#{difference * 100}% - #{@path}", color: color
+        print_screenshot_difference
       else
         log "Error: #{screenshot_count} of #{expected_count} screenshots generated for #{@path}", color: :red
       end
@@ -39,9 +37,17 @@ module Clyde
       visit @path
     end
 
-    def diff_screenshots
-      ImageUtil.pixel_difference(@screenshots[0].file_path,
-                                 @screenshots[1].file_path)
+    def print_screenshot_difference
+      begin
+        difference = ImageUtil.pixel_difference(@screenshots[0].file_path,
+                                                @screenshots[1].file_path)
+
+        percentage = "#{difference * 100}%"
+        color = difference > DIFF_THRESHOLD ? :red : :green
+        log "#{percentage} - #{@path}", color: color
+      rescue ChunkyPNG::OutOfBounds
+        log "N/A (Images are of different dimensions)", color: :red
+      end
     end
 
     def set_capybara_host(host)
