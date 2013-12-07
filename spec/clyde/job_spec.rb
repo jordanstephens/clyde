@@ -11,7 +11,7 @@ describe Clyde::Job do
 
   describe "Job#run" do
     it "runs a job for each Clyde host" do
-      Clyde.quiet = true
+      Clyde.set_log_level(:quiet)
       Clyde.hosts = ["localhost:30001", "localhost:30002"]
 
       Clyde.hosts.each do |host|
@@ -26,7 +26,7 @@ describe Clyde::Job do
 
   describe "Job#fetch_page_from_host" do
     it "fetches a page from a host" do
-      Clyde.quiet = true
+      Clyde.set_log_level(:quiet)
 
       Clyde.hosts = ["localhost:30001", "localhost:30002"]
 
@@ -43,7 +43,7 @@ describe Clyde::Job do
 
   describe "Job#run_before_hooks" do
     it "runs before hooks" do
-      Clyde.quiet = true
+      Clyde.set_log_level(:quiet)
 
       Clyde.hosts = ["localhost:30001", "localhost:30002"]
 

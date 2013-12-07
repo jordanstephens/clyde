@@ -28,16 +28,35 @@ describe Clyde do
       expect(Clyde.screenshots_path).to eql(screenshots_path)
     end
 
-    it "runs quietly with --quiet" do
+    it "runs verbosely with --verbose" do
       clydefile_path = "spec/data/empty_clydefile"
-      Clyde.run(["--quiet", "-C", clydefile_path])
-      expect(Clyde.quiet).to eql(true)
+      Clyde.run(["--verbose", "-C", clydefile_path])
+      expect(Clyde.log_level).to eql(:verbose)
+    end
+  end
+
+  describe ".set_log_level" do
+    context "with valid params" do
+      it "sets the log level" do
+        Clyde.set_log_level(:verbose)
+        expect(Clyde.instance_variable_get("@log_level")).to eql(:verbose)
+      end
+    end
+
+    context "with invalid params" do
+      it "raises an exception" do
+        expect(Clyde.instance_variable_get("@log_level")).to eql(:standard)
+        expect {
+          Clyde.set_log_level(:foobar)
+        }.to raise_error(ArgumentError)
+        expect(Clyde.instance_variable_get("@log_level")).to eql(:standard)
+      end
     end
   end
 
   describe ".distribute_paths" do
     it "distributes a job for each path" do
-      Clyde.quiet = true
+      Clyde.set_log_level(:quiet)
 
       Clyde.hosts = ["localhost:30001", "localhost:30002"]
       Clyde.paths = ["/"]

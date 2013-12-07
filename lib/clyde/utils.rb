@@ -9,12 +9,12 @@ module Clyde
 
     def log(str, opts = {})
       opts[:color] ||= :default
-      puts str.colorize(opts[:color])
+      puts str.colorize(opts[:color]) unless Clyde.log_level == :quiet
     end
 
     def notice(str, opts = {})
       opts[:color] ||= :default
-      puts str.colorize(opts[:color]) unless Clyde.quiet
+      puts str.colorize(opts[:color]) if Clyde.log_level == :verbose
     end
   end
 end

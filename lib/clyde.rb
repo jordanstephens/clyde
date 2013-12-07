@@ -28,7 +28,8 @@ module Clyde
     include Hooks
     include Utils
 
-    attr_accessor :hosts, :paths, :quiet,
+    attr_reader :log_level
+    attr_accessor :hosts, :paths,
                   :clydefile, :screenshots_path
 
     def run(args)
@@ -50,7 +51,7 @@ module Clyde
       @paths = []
       @clydefile = "./Clydefile"
       @screenshots_path = "./tmp/clyde"
-      @quiet = false
+      @log_level = :standard # :quiet || :verbose
       unset_all_hooks
     end
 
@@ -66,8 +67,8 @@ module Clyde
           @screenshots_path = path
         end
 
-        opts.on("--quiet", "Be quiet") do
-          @quiet = true
+        opts.on("--verbose", "Get loud!") do
+          set_log_level(:verbose)
         end
 
         opts.on("-h", "--help", "This is it") do
@@ -81,6 +82,14 @@ module Clyde
         end
       end
       options.parse!
+    end
+
+    def set_log_level(val)
+      if ([:quiet, :standard, :verbose].include?(val))
+        @log_level = val
+      else
+        raise ArgumentError, "log_level must be :quiet, :standard, or :verbose"
+      end
     end
 
     def evaluate_clydefile
