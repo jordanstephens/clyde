@@ -32,9 +32,8 @@ module Clyde
     end
 
     def fetch_page_from_host(host)
-      set_capybara_host(host)
       notice "#{host}#{@path}"
-      visit @path
+      visit "http://#{host}#{@path}"
     end
 
     def print_screenshot_difference
@@ -48,10 +47,6 @@ module Clyde
       rescue ChunkyPNG::OutOfBounds
         log "N/A (Images are of different dimensions)", color: :red
       end
-    end
-
-    def set_capybara_host(host)
-      Capybara.app_host = "http://#{host}"
     end
 
     def run_before_hooks
