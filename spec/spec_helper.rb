@@ -1,3 +1,4 @@
+require "pry-debugger"
 require "rspec"
 require "billy/rspec"
 require "clyde"
