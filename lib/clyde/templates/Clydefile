@@ -1,0 +1,21 @@
+# Example Clydefile
+
+# clyde will visit all paths at both of the following hosts
+hosts "example.com", "staging.example.com"
+
+# paths to visit, screenshot, and compare
+paths %w(
+  /about
+  /contact
+)
+
+# code in the following block will run before taking screenshots
+# on each page
+# before :each do |page, opts|
+# end
+
+# code in the following block will run before taking screenshots
+# on pages with urls that match the given pattern
+# before /\d+/ do |page, opts|
+# end
+

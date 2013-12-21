@@ -1,6 +1,15 @@
 require "spec_helper"
 
 describe Clyde::Clydefile do
+  describe ".generate" do
+    it "generates an example Clydefile" do
+      clydefile_path = "tmp/Clydefile"
+      Clyde::Clydefile.generate(clydefile_path)
+      expect(File.exists?(clydefile_path)).to be_true
+      expect(File.read(clydefile_path)).to eql(File.read(Clyde::Clydefile::TEMPLATE_PATH))
+    end
+  end
+
   describe ".evaluate" do
 
     before :all do
