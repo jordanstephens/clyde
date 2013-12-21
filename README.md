@@ -94,6 +94,12 @@ To define a hook for **matched** pages (in this case, this code will only run on
     before /\d+/ do |page, opts|
       # custom code...
     end
+    
+## Running Tests
+
+Run Clyde tests locally with:
+
+    $ bundle exec rspec spec
 
 ## Contributing
 
