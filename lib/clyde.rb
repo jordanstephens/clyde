@@ -8,7 +8,7 @@ require "clyde/clydefile"
 require "clyde/dsl"
 require "clyde/ghost"
 require "clyde/hooks"
-require "clyde/job"
+require "clyde/screenshot_runner"
 require "clyde/version"
 
 module Clyde
@@ -119,7 +119,7 @@ module Clyde
 
     def capture_screenshots
       Clyde.paths.map do |path|
-        Clyde::Job.new(path).run
+        Clyde::ScreenshotRunner.new(path).run
       end
     end
 

@@ -2,7 +2,7 @@ require "capybara"
 require "clyde/screenshot"
 
 module Clyde
-  class Job
+  class ScreenshotRunner
     include Clyde::Utils
     include Capybara::DSL
 
