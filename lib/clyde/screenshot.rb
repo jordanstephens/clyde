@@ -4,19 +4,21 @@ module Clyde
   class Screenshot
     attr_accessor :host, :url_path
 
-    def initialize(host, url_path, capybara_page, opts = {})
+    def initialize(host, url_path, capybara_page = nil, opts = {})
       @host = host
       @url_path = url_path
 
-      opts = self.class.default_opts.merge(opts)
+      unless capybara_page.nil?
+        opts = self.class.default_opts.merge(opts)
 
-      # can't use :full and :selector at the same time,
-      # so if :selector is defined, remove :full
-      if [:full, :selector].all? { |k| opts.key?(k) }
-        opts.delete(:full)
+        # can't use :full and :selector at the same time,
+        # so if :selector is defined, remove :full
+        if [:full, :selector].all? { |k| opts.key?(k) }
+          opts.delete(:full)
+        end
+
+        capybara_page.driver.save_screenshot(file_path, opts)
       end
-
-      capybara_page.driver.save_screenshot(file_path, opts)
     end
 
     def file_path
@@ -36,6 +38,11 @@ module Clyde
       attrs[:url_path] = CGI::unescape(path_components.last)
                            .sub(".#{Clyde::SCREENSHOT_EXTENSION}", "")
       attrs
+    end
+
+    def self.from_file(path)
+      attrs = attrs_from_file_path(path)
+      new(attrs[:host], attrs[:url_path])
     end
 
     def self.default_opts
