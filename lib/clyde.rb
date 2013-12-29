@@ -1,5 +1,6 @@
 require "capybara"
 require "capybara/poltergeist"
+require "thread/pool"
 require "optparse"
 
 require "clyde/utils"
@@ -54,6 +55,7 @@ module Clyde
       @clydefile = "./Clydefile"
       @screenshots_path = "./tmp/clyde"
       @log_level = :standard # :quiet || :verbose
+      @thread_count = 1
       unset_all_hooks
     end
 
@@ -81,6 +83,11 @@ module Clyde
 
         opts.on("--verbose", "Get loud!") do
           set_log_level(:verbose)
+        end
+
+        opts.on("-t [COUNT]", "--threads [COUNT]", "Number of threads to use when comparing screenshots") do |thread_count|
+          # gotta love a good thread count
+          @thread_count = thread_count.to_i
         end
 
         opts.on("-h", "--help", "This is it") do
@@ -124,15 +131,22 @@ module Clyde
     end
 
     def compare_screenshot_pairs(screenshot_pairs)
+      pool = Thread.pool(@thread_count)
+
       screenshot_pairs.each do |screenshots|
-        url_path = screenshots.first.url_path
-        if screenshots.length == Clyde.hosts.length
-          notice "comparing \t#{url_path}"
-          print_screenshot_difference(screenshots)
-        else
-          log "Error: #{screenshots.length} of #{CLyde.hosts.length} screenshots generated for #{url_path}", color: :red
+        pool.process do
+          url_path = screenshots.first.url_path
+
+          if screenshots.length == Clyde.hosts.length
+            notice "comparing \t#{url_path}"
+            print_screenshot_difference(screenshots)
+          else
+            log "Error: #{screenshots.length} of #{CLyde.hosts.length} screenshots generated for #{url_path}", color: :red
+          end
         end
       end
+
+      pool.shutdown
     end
 
     def print_screenshot_difference(screenshots)

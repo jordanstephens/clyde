@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-rspec"
   spec.add_development_dependency "puffing-billy"
   spec.add_dependency "colorize"
+  spec.add_dependency "thread"
   spec.add_dependency "poltergeist"
   spec.add_dependency "chunky_png"
 end
