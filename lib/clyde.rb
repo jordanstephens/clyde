@@ -107,7 +107,10 @@ module Clyde
         Clyde::Clydefile.evaluate(@clydefile)
       rescue Errno::ENOENT
         puts "clyde aborted!"
-        puts "No Clydefile found. (looking for #{@clydefile})"
+        puts "No Clydefile found. Create one by running the following command:"
+        puts
+        puts "  clyde --init"
+        puts
         exit_normal
       end
     end
