@@ -16,15 +16,20 @@ module Clyde
     end
 
     def run
+      notice "running \t#{@path}"
       Clyde.hosts.each do |host|
+        notice "visiting \t#{host}#{@path}"
         fetch_page_from_host(host)
+        notice "running hooks \t#{host}#{@path}"
         run_before_hooks
+        notice "capturing \t#{host}#{@path}"
         @screenshots << Screenshot.new(host, @path, page, @screenshot_opts)
       end
 
       screenshot_count = @screenshots.length
       expected_count = Clyde.hosts.length
       if screenshot_count == Clyde.hosts.length
+        notice "comparing \t#{@path}"
         print_screenshot_difference
       else
         log "Error: #{screenshot_count} of #{expected_count} screenshots generated for #{@path}", color: :red
@@ -32,7 +37,6 @@ module Clyde
     end
 
     def fetch_page_from_host(host)
-      notice "#{host}#{@path}"
       visit "http://#{host}#{@path}"
     end
 
