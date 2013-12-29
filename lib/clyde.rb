@@ -63,7 +63,7 @@ module Clyde
       args.extend(::OptionParser::Arguable)
 
       options = args.options do |opts|
-        opts.on("--init") do
+        opts.on("--init", "Create a starter Clydefile in the current directory") do
           expanded_path = File.expand_path(Clyde.clydefile)
           if File.exists?(expanded_path)
             puts "#{expanded_path} already exists"
@@ -73,6 +73,7 @@ module Clyde
           end
           exit_normal
         end
+
         opts.on("-C [PATH]", "--clydefile [PATH]", "Path to Clydefile") do |path|
           @clydefile = path
         end
