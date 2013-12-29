@@ -19,7 +19,7 @@ module Clyde
       notice "running \t#{@path}"
       Clyde.hosts.each do |host|
         notice "visiting \t#{host}#{@path}"
-        fetch_page_from_host(host)
+        visit_page_at_host(host)
         notice "running hooks \t#{host}#{@path}"
         run_before_hooks
         notice "capturing \t#{host}#{@path}"
@@ -36,7 +36,7 @@ module Clyde
       end
     end
 
-    def fetch_page_from_host(host)
+    def visit_page_at_host(host)
       visit "http://#{host}#{@path}"
     end
 
