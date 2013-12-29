@@ -141,7 +141,7 @@ module Clyde
             notice "comparing \t#{url_path}"
             print_screenshot_difference(screenshots)
           else
-            log "Error: #{screenshots.length} of #{CLyde.hosts.length} screenshots generated for #{url_path}", color: :red
+            log "Error: #{screenshots.length} of #{Clyde.hosts.length} screenshots generated for #{url_path}", color: :red
           end
         end
       end
