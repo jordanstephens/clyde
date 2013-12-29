@@ -20,9 +20,22 @@ module Clyde
     end
 
     def file_path
-      filename = [CGI.escape(@url_path),
+      self.class.file_path_from_host_and_url_path(@host, @url_path)
+    end
+
+    def self.file_path_from_host_and_url_path(host, url_path)
+      filename = [CGI.escape(url_path),
                   Clyde::SCREENSHOT_EXTENSION].join(".")
-      File.join(Clyde.screenshots_path, @host, filename)
+      File.join(Clyde.screenshots_path, host, filename)
+    end
+
+    def self.attrs_from_file_path(path)
+      attrs = {}
+      path_components = path.split("/").last(2)
+      attrs[:host] = path_components.first
+      attrs[:url_path] = CGI::unescape(path_components.last)
+                           .sub(".#{Clyde::SCREENSHOT_EXTENSION}", "")
+      attrs
     end
 
     def self.default_opts
