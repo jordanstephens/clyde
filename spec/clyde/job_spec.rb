@@ -5,7 +5,6 @@ describe Clyde::Job do
     it "defines a new job" do
       job = Clyde::Job.new("/foo")
       expect(job.path).to eql("/foo")
-      expect(job.screenshots).to eql([])
     end
   end
 
@@ -37,7 +36,6 @@ describe Clyde::Job do
 
       job = Clyde::Job.new("/foo")
       job.run
-      expect(job.screenshots.length).to eql(2)
     end
   end
 

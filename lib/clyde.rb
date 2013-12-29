@@ -3,6 +3,7 @@ require "capybara/poltergeist"
 require "optparse"
 
 require "clyde/utils"
+require "clyde/image_util"
 require "clyde/clydefile"
 require "clyde/dsl"
 require "clyde/ghost"
@@ -43,7 +44,8 @@ module Clyde
       # read user inputs from Clydefile
       evaluate_clydefile
 
-      distribute_paths
+      @screenshot_pairs = capture_screenshots
+      compare_screenshot_pairs(@screenshot_pairs)
     end
 
     def set_defaults
@@ -115,9 +117,34 @@ module Clyde
       end
     end
 
-    def distribute_paths
-      Clyde.paths.each do |path|
+    def capture_screenshots
+      Clyde.paths.map do |path|
         Clyde::Job.new(path).run
+      end
+    end
+
+    def compare_screenshot_pairs(screenshot_pairs)
+      screenshot_pairs.each do |screenshots|
+        url_path = screenshots.first.url_path
+        if screenshots.length == Clyde.hosts.length
+          notice "comparing \t#{url_path}"
+          print_screenshot_difference(screenshots)
+        else
+          log "Error: #{screenshots.length} of #{CLyde.hosts.length} screenshots generated for #{url_path}", color: :red
+        end
+      end
+    end
+
+    def print_screenshot_difference(screenshots)
+      begin
+        difference = ImageUtil.pixel_difference(screenshots[0].file_path,
+                                                screenshots[1].file_path)
+
+        percentage = "#{difference * 100}%"
+        color = difference > DIFF_THRESHOLD ? :red : :green
+        log "#{percentage} - #{screenshots.first.url_path}", color: color
+      rescue ChunkyPNG::OutOfBounds
+        log "N/A (Images are of different dimensions)", color: :red
       end
     end
   end
