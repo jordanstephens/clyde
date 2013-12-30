@@ -16,12 +16,19 @@ module Clyde
     def run
       notice "running \t#{@path}"
       Clyde.hosts.map do |host|
-        notice "visiting \t#{host}#{@path}"
-        visit_page_at_host(host)
-        notice "running hooks \t#{host}#{@path}"
-        run_before_hooks
-        notice "capturing \t#{host}#{@path}"
-        Screenshot.new(host, @path, page, @screenshot_opts)
+        file_path = Clyde::Screenshot.file_path_from_host_and_url_path(host, @path)
+
+        if File.exists?(file_path)
+          notice "using cache for\t#{host}#{@path}"
+          Clyde::Screenshot.from_file(file_path)
+        else
+          notice "visiting \t#{host}#{@path}"
+          visit_page_at_host(host)
+          notice "running hooks \t#{host}#{@path}"
+          run_before_hooks
+          notice "capturing \t#{host}#{@path}"
+          Clyde::Screenshot.new(host, @path, page, @screenshot_opts)
+        end
       end
     end
 

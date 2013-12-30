@@ -42,6 +42,8 @@ module Clyde
       # override defaults with user options
       parse_options(@args)
 
+      issue_prompts
+
       # read user inputs from Clydefile
       evaluate_clydefile
 
@@ -54,6 +56,7 @@ module Clyde
       @paths = []
       @clydefile = "./Clydefile"
       @screenshots_path = "./tmp/clyde"
+      @use_cache = nil
       @log_level = :standard # :quiet || :verbose
       @thread_count = 1
       unset_all_hooks
@@ -80,6 +83,14 @@ module Clyde
 
         opts.on("-S [PATH]", "--screenshots [PATH]", "Path to screenshots directory") do |path|
           @screenshots_path = path
+        end
+
+        opts.on("--use-cache", "Use previously cached screenshots if present") do
+          @use_cache = true
+        end
+
+        opts.on("--no-use-cache", "Clears image cache and forces new screenshots to be taken") do
+          @use_cache = false
         end
 
         opts.on("--verbose", "Get loud!") do
@@ -125,6 +136,16 @@ module Clyde
       end
     end
 
+    def clear_screenshot_cache!
+      full_screenshots_path = File.expand_path(@screenshots_path)
+      current_directory = File.dirname(File.expand_path(__FILE__))
+      if full_screenshots_path.include?(current_directory)
+        FileUtils.rm_rf(@screenshots_path)
+      else
+        puts "cannot delete out of bounds directory: #{@screenshots_path}"
+      end
+    end
+
     def capture_screenshots
       Clyde.paths.map do |path|
         Clyde::ScreenshotRunner.new(path).run
@@ -161,6 +182,30 @@ module Clyde
       rescue ChunkyPNG::OutOfBounds
         log "N/A (Images are of different dimensions)", color: :red
       end
+    end
+
+    private
+
+    def issue_prompts
+      # if neither --use-cache nor --no-use-cache flags were passed,
+      # prompt the user for their preference
+      if @use_cache.nil? && cached_images_exist?
+        puts "Previously cached images exist. Please choose from the following options:"
+        puts "  (1) Clear cache and capture fresh screenshots. (rm -rf #{@screenshots_path})"
+        puts "  (2) Use cached images where possible and avoid capturing fresh screenshots."
+        print "(1,2) > "
+        cmd = STDIN.gets.chomp.to_i
+        if cmd == 1
+          clear_screenshot_cache!
+        else
+          puts "Error: Invalid option selected"
+        end
+      end
+    end
+
+    def cached_images_exist?
+      host_dirs = Dir.glob(File.join(@screenshots_path, "*"))
+      !(host_dirs.nil? || host_dirs.empty?)
     end
   end
 end
