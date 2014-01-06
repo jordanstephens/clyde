@@ -197,6 +197,8 @@ module Clyde
         cmd = STDIN.gets.chomp.to_i
         if cmd == 1
           clear_screenshot_cache!
+        elsif cmd == 2
+          # do nothing, continue...
         else
           puts "Error: Invalid option selected"
         end
