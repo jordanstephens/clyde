@@ -201,6 +201,7 @@ module Clyde
           # do nothing, continue...
         else
           puts "Error: Invalid option selected"
+          exit_normal
         end
       end
     end
