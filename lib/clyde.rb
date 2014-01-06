@@ -138,7 +138,7 @@ module Clyde
 
     def clear_screenshot_cache!
       full_screenshots_path = File.expand_path(@screenshots_path)
-      current_directory = File.dirname(File.expand_path(__FILE__))
+      current_directory = Dir.pwd
       if full_screenshots_path.include?(current_directory)
         FileUtils.rm_rf(@screenshots_path)
       else
